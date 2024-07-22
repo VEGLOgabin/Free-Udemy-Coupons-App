@@ -1,0 +1,6 @@
+streamlit
+pandas
+selenium
+webdriver-manager
+plotly-express
+apscheduler

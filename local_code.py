@@ -1,18 +1,12 @@
-import streamlit as st # pip install streamlit
+
+import streamlit as st
 import time
 import os
 import pandas as pd
-import plotly.express as px # pip install plotly-express
-from glob import glob
+import plotly.express as px
 from datetime import datetime
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
 from selenium.common.exceptions import NoSuchElementException
 import sqlite3
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -31,14 +25,9 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
         self.conn = sqlite3.connect(DATABASE_NAME)
         
     def load_webpage(self):
-        # Deploy on streamlit server selenium integration
-        firefoxOptions = Options()
-        firefoxOptions.add_argument("--headless")
-        service = Service(GeckoDriverManager().install())
-        self.driver = webdriver.Firefox(
-            options=firefoxOptions,
-            service=service,
-        )
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--headless")
+        self.driver = webdriver.Firefox(options=options)
         self.driver.implicitly_wait(5)
         self.driver.get(self.url)
         
@@ -71,6 +60,12 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
             self.save_to_db(coupons_data_list)
         except NoSuchElementException:
             return None
+
+    # def save_to_db(self, data):
+    #     cursor = self.conn.cursor()
+    #     cursor.executemany('''INSERT INTO coupons (date, title, course, category, provider, duration, rating, language, students_enrolled, price_discounted, price_original, views) 
+    #                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', data)
+    #     self.conn.commit()
     
     def save_to_db(self, data):
         cursor = self.conn.cursor()
