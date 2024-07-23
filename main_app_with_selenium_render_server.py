@@ -318,8 +318,8 @@ def schedule_scraper():
     }
     
     # Add jobs
-    scheduler.add_job(run_scraper, IntervalTrigger(minutes=15), id=job_ids['run_scraper'], replace_existing=True)
-    scheduler.add_job(run, IntervalTrigger(minutes=15), id=job_ids['run'], replace_existing=True)
+    scheduler.add_job(run_scraper, IntervalTrigger(minutes=4), id=job_ids['run_scraper'], replace_existing=True)
+    scheduler.add_job(run, IntervalTrigger(minutes=4), id=job_ids['run'], replace_existing=True)
     
     
     try:
