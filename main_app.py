@@ -32,15 +32,33 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
         
     def load_webpage(self):
         # Deploy on streamlit server selenium integration
+        # firefoxOptions = Options()
+        # firefoxOptions.add_argument("--headless")
+        # service = Service(GeckoDriverManager().install())
+        # self.driver = webdriver.Firefox(
+        #     options=firefoxOptions,
+        #     service=service,
+        # )
+        # self.driver.implicitly_wait(5)
+        # self.driver.get(self.url)
         firefoxOptions = Options()
         firefoxOptions.add_argument("--headless")
-        service = Service(GeckoDriverManager().install())
+        
+        # Cache the geckodriver
+        geckodriver_path = os.path.join(os.getcwd(), 'geckodriver')
+        if not os.path.exists(geckodriver_path):
+            service = Service(GeckoDriverManager().install())
+        else:
+            service = Service(geckodriver_path)
+        
         self.driver = webdriver.Firefox(
             options=firefoxOptions,
             service=service,
         )
         self.driver.implicitly_wait(5)
         self.driver.get(self.url)
+        
+        
         
     def scrape_coupons(self):
         try:
@@ -273,8 +291,8 @@ def run():
 
 def schedule_scraper():
     scheduler = BlockingScheduler()
-    scheduler.add_job(run_scraper, IntervalTrigger(minutes=2),id='run_scraper', replace_existing=True)
-    scheduler.add_job(run, IntervalTrigger(minutes=2),id='run', replace_existing=True)
+    scheduler.add_job(run_scraper, IntervalTrigger(minutes=15),id='run_scraper', replace_existing=True)
+    scheduler.add_job(run, IntervalTrigger(minutes=15),id='run', replace_existing=True)
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
