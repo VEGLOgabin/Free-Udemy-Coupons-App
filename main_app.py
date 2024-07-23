@@ -273,8 +273,8 @@ def run():
 
 def schedule_scraper():
     scheduler = BlockingScheduler()
-    scheduler.add_job(run_scraper, IntervalTrigger(minutes=2),id='run_scraper', replace_existing=True)
-    scheduler.add_job(run, IntervalTrigger(minutes=2),id='run', replace_existing=True)
+    scheduler.add_job(run_scraper, IntervalTrigger(minutes=15),id='run_scraper', replace_existing=True)
+    scheduler.add_job(run, IntervalTrigger(minutes=15),id='run', replace_existing=True)
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
