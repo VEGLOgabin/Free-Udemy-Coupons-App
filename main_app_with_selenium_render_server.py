@@ -33,15 +33,33 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
         self.driver = None
         self.conn = sqlite3.connect(DATABASE_NAME)
         
+    # def load_webpage(self):
+    #     chrome_options = Options()
+    #     chrome_options.add_argument("--headless")
+    #     chrome_options.add_argument("--no-sandbox")
+    #     chrome_options.add_argument("--disable-dev-shm-usage")
+    #     service = Service(ChromeDriverManager().install())
+    #     self.driver = webdriver.Chrome(service=service, options=chrome_options)
+    #     self.driver.implicitly_wait(5)
+    #     self.driver.get(self.url)
+    
     def load_webpage(self):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        service = Service(ChromeDriverManager().install())
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--remote-debugging-port=9222")
+        
+        # Specify the Chrome driver version explicitly
+        chrome_driver_version = '114.0.5735.90'  # Replace this with the required version
+        
+        service = Service(ChromeDriverManager(version=chrome_driver_version).install())
         self.driver = webdriver.Chrome(service=service, options=chrome_options)
         self.driver.implicitly_wait(5)
         self.driver.get(self.url)
+        
+        
         
     def scrape_coupons(self):
         try:
