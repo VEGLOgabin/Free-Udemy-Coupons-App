@@ -4,3 +4,5 @@ selenium
 webdriver-manager
 plotly-express
 apscheduler
+requests-html
+
