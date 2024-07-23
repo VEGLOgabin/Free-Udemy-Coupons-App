@@ -32,9 +32,25 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
         
     def load_webpage(self):
         # Deploy on streamlit server selenium integration
+        # firefoxOptions = Options()
+        # firefoxOptions.add_argument("--headless")
+        # service = Service(GeckoDriverManager().install())
+        # self.driver = webdriver.Firefox(
+        #     options=firefoxOptions,
+        #     service=service,
+        # )
+        # self.driver.implicitly_wait(5)
+        # self.driver.get(self.url)
         firefoxOptions = Options()
         firefoxOptions.add_argument("--headless")
-        service = Service(GeckoDriverManager().install())
+
+        # Cache the geckodriver
+        geckodriver_path = os.path.join(os.getcwd(), 'geckodriver')
+        if not os.path.exists(geckodriver_path):
+            service = Service(GeckoDriverManager().install())
+        else:
+            service = Service(geckodriver_path)
+        
         self.driver = webdriver.Firefox(
             options=firefoxOptions,
             service=service,
@@ -78,8 +94,9 @@ class RealDiscountUdemyCoursesCouponCodeScraper:
             cursor.execute('''SELECT 1 FROM coupons WHERE title = ? AND course = ? AND date = ?''', (row[1], row[2], row[0]))
             if cursor.fetchone() is None:
                 cursor.execute('''INSERT INTO coupons (date, title, course, category, provider, duration, rating, language, students_enrolled, price_discounted, price_original, views) 
-                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', row)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', row)
         self.conn.commit()
+
         
     def close_driver(self):
         self.driver.quit()
