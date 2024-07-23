@@ -17,6 +17,8 @@ from selenium.common.exceptions import NoSuchElementException
 import sqlite3
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.triggers.interval import IntervalTrigger
 import logging
 
 logging.basicConfig()
@@ -290,15 +292,33 @@ def run():
         st.warning("No data available based on the current filter settings!")
 
 def schedule_scraper():
-    scheduler = BlockingScheduler()
-    scheduler.add_job(run_scraper, IntervalTrigger(minutes=15),id='run_scraper', replace_existing=True)
-    scheduler.add_job(run, IntervalTrigger(minutes=15),id='run', replace_existing=True)
+    # scheduler = BlockingScheduler()
+    # scheduler.add_job(run_scraper, IntervalTrigger(minutes=15),id='run_scraper', replace_existing=True)
+    # scheduler.add_job(run, IntervalTrigger(minutes=15),id='run', replace_existing=True)
+    scheduler = BackgroundScheduler()
+    
+    # Define job IDs
+    job_ids = {
+        'run_scraper': 'run_scraper',
+        'run': 'run'
+    }
+    
+    # Add jobs
+    scheduler.add_job(run_scraper, IntervalTrigger(minutes=15), id=job_ids['run_scraper'], replace_existing=True)
+    scheduler.add_job(run, IntervalTrigger(minutes=15), id=job_ids['run'], replace_existing=True)
+    
+    
     try:
+       # Start the scheduler
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
+        
+def main():
+    # Create database and start Streamlit app
+    create_db()
+    schedule_scraper()
+    run()
 
 if __name__ == "__main__":
-    create_db()
-    run()
-    schedule_scraper()
+    main()
