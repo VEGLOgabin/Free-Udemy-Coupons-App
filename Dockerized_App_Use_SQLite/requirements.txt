@@ -1,0 +1,6 @@
+streamlit
+pandas
+selenium
+plotly-express
+apscheduler
+

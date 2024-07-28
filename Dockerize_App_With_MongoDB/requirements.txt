@@ -1,0 +1,9 @@
+streamlit
+playwright
+pandas
+plotly-express
+apscheduler
+pymongo
+
+
+
